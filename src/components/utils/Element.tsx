@@ -14,7 +14,7 @@ function Element(props: {
           <Flex direction="column" p={5}>
             <Box borderBottomWidth={2} borderBottomColor={'gray.100'}>
               <Flex align="center" justify="center">
-                <Text fontSize="2xl">{props.title}</Text>
+                <Text fontSize="3xl">{props.title}</Text>
                 <Spacer />
                 {props.rightComponent ? props.rightComponent : <></>}
               </Flex>

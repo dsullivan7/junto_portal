@@ -4,6 +4,8 @@ import {
   Flex,
   Button,
   Text,
+  Box,
+  Spacer,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -79,14 +81,12 @@ function Account(): React.ReactElement {
     const token = await getAccessTokenSilently()
 
     if (token && userCurrent && bankAccounts.length) {
-      console.log('data')
-      console.log(data)
-      // await juntoClient.createBankTransfer(token, {
-      //   user_id: userCurrent.user_id,
-      //   plaid_account_id: bankAccounts[0].plaid_account_id,
-      //   plaid_access_token: bankAccounts[0].plaid_access_token,
-      //   amount: data.amount,
-      // })
+      await juntoClient.createBankTransfer(token, {
+        user_id: userCurrent.user_id,
+        plaid_account_id: bankAccounts[0].plaid_account_id,
+        plaid_access_token: bankAccounts[0].plaid_access_token,
+        amount: data.amount,
+      })
     }
   }
 
@@ -99,6 +99,35 @@ function Account(): React.ReactElement {
       </>
     )
   }
+
+  let bankAccountsComponent
+
+  if (bankAccounts.length) {
+    bankAccountsComponent = (
+      <Box>
+        <Flex py={3} px={20} borderRadius={5} boxShadow="md" direction="column" align="center">
+          <Text color="gray.500">Linked account</Text>
+          <Text fontSize="4xl">{bankAccounts[0].name}</Text>
+        </Flex>
+        <Box py={3}>
+          <Button onClick={() => setShowTransferForm(true)}>Transfer funds</Button>
+        </Box>
+      </Box>
+    )
+  } else {
+    bankAccountsComponent = (
+      <Box py={3}>
+        <PlaidLink title="Link bank account" token={plaidToken} onSuccess={handlePlaidLinkSuccess} />
+      </Box>
+    )
+  }
+
+  const accountComponent = (
+    <Flex borderRadius={5} boxShadow="md" py={3} px={20} direction="column" align="center">
+      <Text color="gray.500">Account balance</Text>
+      <Text fontSize="4xl">$0.00</Text>
+    </Flex>
+  )
 
   return (
     <>
@@ -114,11 +143,12 @@ function Account(): React.ReactElement {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Element title="My Account">
-        <Text>Welcome to your account page</Text>
-        <Text>You have {bankAccounts.length} connected accounts</Text>
-        <PlaidLink title="Link bank account" token={plaidToken} onSuccess={handlePlaidLinkSuccess} />
-        <Button onClick={() => setShowTransferForm(true)}>Make bank transfer</Button>
+      <Element title="Overview">
+        <Flex>
+          {bankAccountsComponent}
+          <Spacer />
+          {accountComponent}
+        </Flex>
       </Element>
     </>
   )
