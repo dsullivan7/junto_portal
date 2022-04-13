@@ -6,6 +6,7 @@ import {
   Text,
   Box,
   Spacer,
+  Progress,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -22,10 +23,10 @@ import Element from './utils/Element'
 import Loader from './utils/Loader'
 import PlaidLink from './utils/PlaidLink'
 import BankTransferForm from './forms/BankTransferForm'
-import NumberFormat from 'react-number-format'
 
 function Account(): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false)
+  const [accountLoading, setAccountLoading] = useState<boolean>(false)
   const [userCurrent, setUserCurrent] = useState<User | null>(null)
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
   const [bankTransfers, setBankTransfers] = useState<BankTransfer[]>([])
@@ -83,6 +84,7 @@ function Account(): React.ReactElement {
 
   async function handleBankTransferCreate(data: { amount: number }) {
     setShowTransferForm(false)
+    setAccountLoading(true)
     const token = await getAccessTokenSilently()
     if (token && userCurrent && bankAccounts.length) {
       const bankTransfer = await juntoClient.createBankTransfer(token, {
@@ -93,6 +95,7 @@ function Account(): React.ReactElement {
       })
       setBankTransfers((previous) => [...previous, bankTransfer])
     }
+    setAccountLoading(false)
   }
 
   if (loading) {
@@ -130,9 +133,15 @@ function Account(): React.ReactElement {
   const accountComponent = (
     <Flex borderRadius={5} p={3} boxShadow="md" direction="column" align="center" justify="center" width="30%">
       <Text color="gray.500">Account balance</Text>
-      <Text fontSize="4xl">
-        {bankTransfers.length ? `$${bankTransfers.reduce((acc, bt) => acc + bt.amount, 0) / 100}` : '$0.00'}
-      </Text>
+      {accountLoading ? (
+        <Box p={6} width="100%">
+          <Progress size="xs" colorScheme="brand.primary" isIndeterminate />
+        </Box>
+      ) : (
+        <Text fontSize="4xl">
+          {bankTransfers.length ? `$${bankTransfers.reduce((acc, bt) => acc + bt.amount, 0) / 100}` : '$0.00'}
+        </Text>
+      )}
     </Flex>
   )
 
