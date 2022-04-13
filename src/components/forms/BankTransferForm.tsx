@@ -5,13 +5,13 @@ import NumberFormat from 'react-number-format'
 
 import { Controller, useForm } from 'react-hook-form'
 
-function BankTransferForm(props: { onSubmit: (data: { amount: string }) => void }): React.ReactElement {
+function BankTransferForm(props: { onSubmit: (data: { amount: number }) => void }): React.ReactElement {
   const {
     handleSubmit,
     formState: { errors },
     control,
   } = useForm<{
-    amount: string
+    amount: number
   }>()
 
   return (
@@ -30,7 +30,7 @@ function BankTransferForm(props: { onSubmit: (data: { amount: string }) => void 
                   prefix={'$'}
                   decimalScale={2}
                   value={value}
-                  onValueChange={(v) => onChange(v.value)}
+                  onValueChange={(v) => onChange(v.floatValue)}
                 />
               )}
               name="amount"

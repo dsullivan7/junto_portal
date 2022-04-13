@@ -22,11 +22,13 @@ import Element from './utils/Element'
 import Loader from './utils/Loader'
 import PlaidLink from './utils/PlaidLink'
 import BankTransferForm from './forms/BankTransferForm'
+import NumberFormat from 'react-number-format'
 
 function Account(): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false)
   const [userCurrent, setUserCurrent] = useState<User | null>(null)
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
+  const [bankTransfers, setBankTransfers] = useState<BankTransfer[]>([])
   const [plaidToken, setPlaidToken] = useState<string | null>(null)
   const [showTransferForm, setShowTransferForm] = useState<boolean>(false)
 
@@ -49,13 +51,15 @@ function Account(): React.ReactElement {
       }
 
       if (userFound) {
-        const [plaidTokenRes, bankAccountsRes] = await Promise.all([
+        const [plaidTokenRes, bankAccountsRes, bankTransfersRes] = await Promise.all([
           juntoClient.createPlaidToken(token, { user_id: userFound.user_id }),
           juntoClient.listBankAccounts(token, { user_id: userFound.user_id }),
+          juntoClient.listBankTransfers(token, { user_id: userFound.user_id }),
         ])
 
         setPlaidToken(plaidTokenRes.value)
         setBankAccounts(bankAccountsRes)
+        setBankTransfers(bankTransfersRes)
       }
     }
 
@@ -77,16 +81,17 @@ function Account(): React.ReactElement {
     setLoading(false)
   }
 
-  async function handleBankTransferCreate(data: { amount: string }) {
+  async function handleBankTransferCreate(data: { amount: number }) {
+    setShowTransferForm(false)
     const token = await getAccessTokenSilently()
-
     if (token && userCurrent && bankAccounts.length) {
-      await juntoClient.createBankTransfer(token, {
+      const bankTransfer = await juntoClient.createBankTransfer(token, {
         user_id: userCurrent.user_id,
         plaid_account_id: bankAccounts[0].plaid_account_id,
         plaid_access_token: bankAccounts[0].plaid_access_token,
-        amount: data.amount,
+        amount: data.amount * 100,
       })
+      setBankTransfers((previous) => [...previous, bankTransfer])
     }
   }
 
@@ -104,7 +109,7 @@ function Account(): React.ReactElement {
 
   if (bankAccounts.length) {
     bankAccountsComponent = (
-      <Box>
+      <Box width="30%">
         <Flex py={3} px={20} borderRadius={5} boxShadow="md" direction="column" align="center">
           <Text color="gray.500">Linked account</Text>
           <Text fontSize="4xl">{bankAccounts[0].name}</Text>
@@ -123,9 +128,11 @@ function Account(): React.ReactElement {
   }
 
   const accountComponent = (
-    <Flex borderRadius={5} boxShadow="md" py={3} px={20} direction="column" align="center">
+    <Flex borderRadius={5} p={3} boxShadow="md" direction="column" align="center" justify="center" width="30%">
       <Text color="gray.500">Account balance</Text>
-      <Text fontSize="4xl">$0.00</Text>
+      <Text fontSize="4xl">
+        {bankTransfers.length ? `$${bankTransfers.reduce((acc, bt) => acc + bt.amount, 0) / 100}` : '$0.00'}
+      </Text>
     </Flex>
   )
 

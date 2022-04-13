@@ -12,7 +12,7 @@ export const createBankTransfer = (
   token: string,
   payload: {
     user_id: string
-    amount: string
+    amount: number
     plaid_account_id: string
     plaid_access_token: string
     plaid_originiation_account_id?: string
