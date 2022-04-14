@@ -12,8 +12,6 @@ import LogoutButton from './LogoutButton'
 import { ConfirmationProvider } from './utils/ConfirmationProvider'
 import ProtectedRoute from '../auth/ProtectedRoute'
 
-import logo from '../images/star_brand.png'
-
 function App(): React.ReactElement {
   const { isAuthenticated } = useAuth0()
   return (
@@ -23,8 +21,8 @@ function App(): React.ReactElement {
           <Navbar title={'Junto'} rightComponent={isAuthenticated ? <LogoutButton /> : null} />
           <Flex py={5} justify="center">
             <Switch>
-              <ProtectedRoute path="/account" component={Account} />
-              <Redirect to="/account" />
+              <ProtectedRoute path="/" component={Account} />
+              <Redirect to="/" />
             </Switch>
           </Flex>
         </Flex>
