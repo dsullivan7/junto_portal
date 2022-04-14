@@ -17,6 +17,7 @@ function Auth0ProviderWithHistory({
 
   return (
     <Auth0Provider
+      screen_hint="signup"
       domain={domain}
       clientId={clientId}
       audience={audience}
