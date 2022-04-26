@@ -131,16 +131,41 @@ function Account(): React.ReactElement {
   }
 
   const accountComponent = (
-    <Flex borderRadius={5} p={3} boxShadow="md" direction="column" align="center" justify="center" width="30%">
+    <Flex borderRadius={5} p={3} boxShadow="md" direction="column" align="center" justify="center" width="40%">
       <Text color="gray.500">Account balance</Text>
       {accountLoading ? (
         <Box p={6} width="100%">
           <Progress size="xs" colorScheme="brand.primary" isIndeterminate />
         </Box>
       ) : (
-        <Text fontSize="4xl">
-          {bankTransfers.length ? `$${bankTransfers.reduce((acc, bt) => acc + bt.amount, 0) / 100}` : '$0.00'}
-        </Text>
+        <>
+          <Box>
+            <Text fontSize="4xl">
+              {bankTransfers.length ? `$${bankTransfers.reduce((acc, bt) => acc + bt.amount, 0) / 100}` : '$0.00'}
+            </Text>
+          </Box>
+          <Flex width="100%" py={5}>
+            <Spacer />
+            <Box align="center">
+              <Text fontSize="sm" color="gray.500">
+                Total invested
+              </Text>
+              <Text fontSize="lg">
+                {bankTransfers.length ? `$${bankTransfers.reduce((acc, bt) => acc + bt.amount, 0) / 100}` : '$0.00'}
+              </Text>
+            </Box>
+            <Spacer />
+            <Box align="center">
+              <Text fontSize="sm" color="gray.500">
+                Current return
+              </Text>
+              <Text fontSize="md">
+                {bankTransfers.length ? `$${bankTransfers.reduce((acc, bt) => acc + bt.amount, 0) / 100}` : '$0.00'}
+              </Text>
+            </Box>
+            <Spacer />
+          </Flex>
+        </>
       )}
     </Flex>
   )
