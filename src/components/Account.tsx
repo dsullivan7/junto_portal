@@ -138,8 +138,17 @@ function Account(): React.ReactElement {
   }
 
   const accountComponent = (
-    <Flex borderRadius={5} p={3} boxShadow="md" direction="column" align="center" justify="center" width="40%">
-      <Text color="gray.500">Account balance</Text>
+    <Flex
+      borderRadius={5}
+      p={3}
+      boxShadow="md"
+      direction="column"
+      align="center"
+      justify="center"
+      width="40%"
+      backgroundColor="brand.primary.500"
+    >
+      <Text color="white">Account balance</Text>
       {accountLoading ? (
         <Box p={6} width="100%">
           <Progress size="xs" colorScheme="brand.primary" isIndeterminate />
@@ -147,22 +156,28 @@ function Account(): React.ReactElement {
       ) : (
         <>
           <Box>
-            <Text fontSize="4xl">{balances ? `$${(balances.total / 100).toFixed(2)}` : '$0.00'}</Text>
+            <Text color="white" fontSize="4xl">
+              {balances ? `$${(balances.total / 100).toFixed(2)}` : '$0.00'}
+            </Text>
           </Box>
           <Flex width="100%" py={5}>
             <Spacer />
             <Box align="center">
-              <Text fontSize="sm" color="gray.500">
+              <Text fontSize="sm" color="white">
                 Total invested
               </Text>
-              <Text fontSize="lg">{balances ? `$${(balances.principal / 100).toFixed(2)}` : '$0.00'}</Text>
+              <Text color="white" fontSize="lg">
+                {balances ? `$${(balances.principal / 100).toFixed(2)}` : '$0.00'}
+              </Text>
             </Box>
             <Spacer />
             <Box align="center">
-              <Text fontSize="sm" color="gray.500">
+              <Text fontSize="sm" color="white">
                 Current return
               </Text>
-              <Text fontSize="md">{balances ? `$${(balances.interest / 100).toFixed(2)}` : '$0.00'}</Text>
+              <Text color="white" fontSize="md">
+                {balances ? `$${(balances.interest / 100).toFixed(2)}` : '$0.00'}
+              </Text>
             </Box>
             <Spacer />
           </Flex>

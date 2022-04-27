@@ -27,6 +27,14 @@ const theme = extendTheme({
   colors: {
     brand: {
       primary: {
+        100: '#99d6ff',
+        200: '#4db8ff',
+        300: '#0099ff',
+        400: '#006bb3',
+        500: '#003d66',
+        600: '#001f33',
+      },
+      secondary: {
         100: '#edf6f8',
         200: '#c8e5ea',
         300: '#a3d3db',

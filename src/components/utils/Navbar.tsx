@@ -23,7 +23,7 @@ function Navbar({ logo, title, rightComponent }: Props): React.ReactElement {
           <Link to="/">
             <Flex align="center" justify="center">
               {logo && <Image p={2} src={logo} h={20} />}
-              <Text display={{ base: 'none', md: 'block' }} p={2} fontSize="5xl">
+              <Text display={{ base: 'none', md: 'block' }} m={2} fontSize="5xl" borderBottomWidth={3} borderBottomColor="brand.secondary.300" color="brand.primary.500">
                 {title}
               </Text>
             </Flex>
