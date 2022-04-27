@@ -29,7 +29,7 @@ function Account(): React.ReactElement {
   const [accountLoading, setAccountLoading] = useState<boolean>(false)
   const [userCurrent, setUserCurrent] = useState<User | null>(null)
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
-  const [bankTransfers, setBankTransfers] = useState<BankTransfer[]>([])
+  const [balances, setBalances] = useState<Balances | null>(null)
   const [plaidToken, setPlaidToken] = useState<string | null>(null)
   const [showTransferForm, setShowTransferForm] = useState<boolean>(false)
 
@@ -52,15 +52,15 @@ function Account(): React.ReactElement {
       }
 
       if (userFound) {
-        const [plaidTokenRes, bankAccountsRes, bankTransfersRes] = await Promise.all([
+        const [plaidTokenRes, bankAccountsRes, balancesRes] = await Promise.all([
           juntoClient.createPlaidToken(token, { user_id: userFound.user_id }),
           juntoClient.listBankAccounts(token, { user_id: userFound.user_id }),
-          juntoClient.listBankTransfers(token, { user_id: userFound.user_id }),
+          juntoClient.getBalances(token, userFound.user_id),
         ])
 
         setPlaidToken(plaidTokenRes.value)
         setBankAccounts(bankAccountsRes)
-        setBankTransfers(bankTransfersRes)
+        setBalances(balancesRes)
       }
     }
 
@@ -87,13 +87,20 @@ function Account(): React.ReactElement {
     setAccountLoading(true)
     const token = await getAccessTokenSilently()
     if (token && userCurrent && bankAccounts.length) {
-      const bankTransfer = await juntoClient.createBankTransfer(token, {
+      await juntoClient.createBankTransfer(token, {
         user_id: userCurrent.user_id,
         plaid_account_id: bankAccounts[0].plaid_account_id,
         plaid_access_token: bankAccounts[0].plaid_access_token,
         amount: data.amount * 100,
       })
-      setBankTransfers((previous) => [...previous, bankTransfer])
+      await juntoClient.createOrder(token, {
+        user_id: userCurrent.user_id,
+        amount: data.amount * 100,
+        side: 'buy',
+      })
+
+      const balancesRes = await juntoClient.getBalances(token, userCurrent.user_id)
+      setBalances(balancesRes)
     }
     setAccountLoading(false)
   }
@@ -140,9 +147,7 @@ function Account(): React.ReactElement {
       ) : (
         <>
           <Box>
-            <Text fontSize="4xl">
-              {bankTransfers.length ? `$${bankTransfers.reduce((acc, bt) => acc + bt.amount, 0) / 100}` : '$0.00'}
-            </Text>
+            <Text fontSize="4xl">{balances ? `$${(balances.total / 100).toFixed(2)}` : '$0.00'}</Text>
           </Box>
           <Flex width="100%" py={5}>
             <Spacer />
@@ -150,18 +155,14 @@ function Account(): React.ReactElement {
               <Text fontSize="sm" color="gray.500">
                 Total invested
               </Text>
-              <Text fontSize="lg">
-                {bankTransfers.length ? `$${bankTransfers.reduce((acc, bt) => acc + bt.amount, 0) / 100}` : '$0.00'}
-              </Text>
+              <Text fontSize="lg">{balances ? `$${(balances.principal / 100).toFixed(2)}` : '$0.00'}</Text>
             </Box>
             <Spacer />
             <Box align="center">
               <Text fontSize="sm" color="gray.500">
                 Current return
               </Text>
-              <Text fontSize="md">
-                {bankTransfers.length ? `$${bankTransfers.reduce((acc, bt) => acc + bt.amount, 0) / 100}` : '$0.00'}
-              </Text>
+              <Text fontSize="md">{balances ? `$${(balances.interest / 100).toFixed(2)}` : '$0.00'}</Text>
             </Box>
             <Spacer />
           </Flex>

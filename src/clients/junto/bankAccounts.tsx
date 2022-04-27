@@ -5,7 +5,7 @@ const bankAccountsPath = '/bank-accounts'
 export const listBankAccounts = (token: string, query?: { user_id?: string }): Promise<BankAccount[]> =>
   fetchApi(bankAccountsPath, 'GET', token, query)
 
-export const getBankAccount = (token: string, bankAccountId: string): Promise<BankAccount | undefined> =>
+export const getBankAccount = (token: string, bankAccountId: string): Promise<BankAccount> =>
   fetchApi(`${bankAccountsPath}/${bankAccountId}`, 'GET', token)
 
 export const createBankAccount = (
