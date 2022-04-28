@@ -148,7 +148,9 @@ function Account(): React.ReactElement {
       width="40%"
       backgroundColor="brand.primary.500"
     >
-      <Text color="white">Account balance</Text>
+      <Text color="white" borderBottomWidth={3} borderBottomColor="brand.secondary.300">
+        Account balance
+      </Text>
       {accountLoading ? (
         <Box p={6} width="100%">
           <Progress size="xs" colorScheme="brand.primary" isIndeterminate />
@@ -156,7 +158,7 @@ function Account(): React.ReactElement {
       ) : (
         <>
           <Box>
-            <Text color="white" fontSize="4xl">
+            <Text py={2} color="white" fontSize="4xl">
               {balances ? `$${(balances.total / 100).toFixed(2)}` : '$0.00'}
             </Text>
           </Box>
