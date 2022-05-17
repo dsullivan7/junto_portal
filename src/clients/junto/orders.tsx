@@ -15,10 +15,10 @@ export const createOrder = (
     amount: number
     side: string
   },
-): Promise<Order> => fetchApi(ordersPath, 'POST', token, {}, payload)
+): Promise<Order> => fetchApi(ordersPath, 'POST', token, undefined, payload)
 
 export const modifyOrder = (token: string, orderId: string, payload: { user_id: string }): Promise<Order> =>
-  fetchApi(`${ordersPath}/${orderId}`, 'PUT', token, {}, payload)
+  fetchApi(`${ordersPath}/${orderId}`, 'PUT', token, undefined, payload)
 
 export const deleteOrder = (token: string, orderId: string): Promise<Order | undefined> =>
   fetchApi(`${ordersPath}/${orderId}`, 'DELETE', token)

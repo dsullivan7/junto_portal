@@ -11,10 +11,10 @@ export const getUser = (token: string, userId: string): Promise<User> =>
 export const createUser = (
   token: string,
   payload: { first_name?: string; last_name?: string; email?: string; auth0_id: string },
-): Promise<User> => fetchApi(usersPath, 'POST', token, {}, payload)
+): Promise<User> => fetchApi(usersPath, 'POST', token, undefined, payload)
 
 export const modifyUser = (token: string, userId: string, payload: { user_id: string }): Promise<User> =>
-  fetchApi(`${usersPath}/${userId}`, 'PUT', token, {}, payload)
+  fetchApi(`${usersPath}/${userId}`, 'PUT', token, undefined, payload)
 
 export const deleteUser = (token: string, userId: string): Promise<void> =>
   fetchApi(`${usersPath}/${userId}`, 'DELETE', token)

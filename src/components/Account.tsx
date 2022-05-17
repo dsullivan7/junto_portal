@@ -45,7 +45,7 @@ function Account(): React.ReactElement {
         userFound = await juntoClient.getUser(token, 'me')
         setUserCurrent(userFound)
       } catch (e) {
-        if (e.error.code === 'non_existent' && user && user.sub) {
+        if (e.error.code === 'not_found' && user && user.sub) {
           userFound = await juntoClient.createUser(token, { auth0_id: user.sub })
           setUserCurrent(userFound)
         }
@@ -88,16 +88,14 @@ function Account(): React.ReactElement {
     const token = await getAccessTokenSilently()
     if (token && userCurrent && bankAccounts.length) {
       await juntoClient.createBankTransfer(token, {
-        user_id: userCurrent.user_id,
-        plaid_account_id: bankAccounts[0].plaid_account_id,
-        plaid_access_token: bankAccounts[0].plaid_access_token,
+        bank_account_id: bankAccounts[0].bank_account_id,
         amount: data.amount * 100,
       })
-      await juntoClient.createOrder(token, {
-        user_id: userCurrent.user_id,
-        amount: data.amount * 100,
-        side: 'buy',
-      })
+      // await juntoClient.createOrder(token, {
+      //   user_id: userCurrent.user_id,
+      //   amount: data.amount * 100,
+      //   side: 'buy',
+      // })
 
       const balancesRes = await juntoClient.getBalances(token, userCurrent.user_id)
       setBalances(balancesRes)

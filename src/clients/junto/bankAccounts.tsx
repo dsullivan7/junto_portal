@@ -14,13 +14,13 @@ export const createBankAccount = (
     user_id: string
     plaid_public_token: string
   },
-): Promise<BankAccount> => fetchApi(bankAccountsPath, 'POST', token, {}, payload)
+): Promise<BankAccount> => fetchApi(bankAccountsPath, 'POST', token, undefined, payload)
 
 export const modifyBankAccount = (
   token: string,
   bankAccountId: string,
   payload: { user_id: string },
-): Promise<BankAccount> => fetchApi(`${bankAccountsPath}/${bankAccountId}`, 'PUT', token, {}, payload)
+): Promise<BankAccount> => fetchApi(`${bankAccountsPath}/${bankAccountId}`, 'PUT', token, undefined, payload)
 
 export const deleteBankAccount = (token: string, bankAccountId: string): Promise<BankAccount | undefined> =>
   fetchApi(`${bankAccountsPath}/${bankAccountId}`, 'DELETE', token)

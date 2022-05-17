@@ -2,13 +2,13 @@ import qs from 'querystring'
 
 import config from '../../config'
 
-class VestedAPIException extends Error {
+class JuntoAPIException extends Error {
   error: {
     code: string
     message: string
   }
   constructor(error: { message: string; code: string }) {
-    super('Vested api error')
+    super('Junto api error')
     this.error = error
   }
 }
@@ -25,16 +25,20 @@ export const fetchApi = (
 ) => {
   const headers = {
     Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
   }
   const url = endpointUrl(path, query)
   return fetch(url, { headers, method, body: JSON.stringify(body) }).then((response) => {
     if (response.status === 204) {
       return Promise.resolve()
-    } else if (response.ok) {
+    }
+
+    if (response.ok) {
       return response.json()
     }
+
     return response.json().then((json) => {
-      throw new VestedAPIException(json)
+      throw new JuntoAPIException(json)
     })
   })
 }
