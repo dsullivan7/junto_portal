@@ -91,11 +91,11 @@ function Account(): React.ReactElement {
         bank_account_id: bankAccounts[0].bank_account_id,
         amount: data.amount * 100,
       })
-      // await juntoClient.createOrder(token, {
-      //   user_id: userCurrent.user_id,
-      //   amount: data.amount * 100,
-      //   side: 'buy',
-      // })
+      await juntoClient.createOrder(token, {
+        user_id: userCurrent.user_id,
+        amount: data.amount * 100,
+        side: 'buy',
+      })
 
       const balancesRes = await juntoClient.getBalances(token, userCurrent.user_id)
       setBalances(balancesRes)
