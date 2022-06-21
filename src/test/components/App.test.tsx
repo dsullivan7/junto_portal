@@ -2,8 +2,8 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import App from '../../components/App'
 
-test('renders Tcher Voice brand', () => {
+test('renders Junto brand', () => {
   render(<App />)
-  const linkElement = screen.getByText(/Tcher Voice/i)
+  const linkElement = screen.getByText(/Junto/i)
   expect(linkElement).toBeInTheDocument()
 })
